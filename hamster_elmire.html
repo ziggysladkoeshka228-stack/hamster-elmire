@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hamster Photo Tap</title>
+    <style>
+        /* Стили без изменений */ 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #balanceContainer {
+            margin-top: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        #tapArea {
+            margin: auto;
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(145deg, #ffd700, #daa520);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.6);
+            transition: transform 0.1s;
+            border: 5px solid #ffa500;
+            overflow: hidden; /* Чтобы фото не выходило за границы */
+        }
+
+        #hamsterPhoto {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Фото заполнит круг */
+        }
+
+        #tapArea:active {
+            transform: scale(0.95);
+        }
+
+        @media (min-width: 768px) {
+            #tapArea {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="balanceContainer">₽ <span id="balance">0</span></div>
+    
+    <div id="tapArea">
+        <!-- Замените src на путь к вашей фотографии -->
+        <img id="hamsterPhoto" 
+             src="hamster.jpg" 
+             alt="Ваше фото">
+    </div>
+
+    <script>
+        let balance = parseInt(localStorage.getItem('hamsterBalance')) || 0;
+        let isClicked = false;
+
+        const updateBalance = () => {
+            document.getElementById('balance').textContent = 
+                balance.toLocaleString('ru-RU');
+        };
+
+        const handleTap = () => {
+            if (!isClicked) {
+                isClicked = true;
+                balance++;
+                updateBalance();
+                localStorage.setItem('hamsterBalance', balance);
+                
+                setTimeout(() => {
+                    isClicked = false;
+                }, 100);
+            }
+        };
+
+        // Инициализация
+        updateBalance();
+        
+        const tapArea = document.getElementById('tapArea');
+        tapArea.addEventListener('click', handleTap);
+        tapArea.addEventListener('touchstart', handleTap, { passive: true });
+    </script>
+</body>
+</html>
